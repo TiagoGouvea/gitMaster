@@ -3,28 +3,39 @@ import gh from './Github';
 
 class RepoView extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-
+            repo: null
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         let {user, name} = this.props.match.params;
-        let repos = gh.getRepo(user, name);
-        repos.getDetails((e, r) => {
-            console.log(r);
+        // Get repository
+        let repository = gh.getRepo(user, name);
+        repository.getDetails((e, repo) => {
+            this.setState({repo: repo});
+        })
+        // Get Issues
+        let issues = gh.getIssues(user, name);
+        issues.listIssues({state:'open'}, (e, items)=>{
+            console.log("items",items);
         })
     }
 
     render() {
-        let repo = this.props.repo;
-        return null;
+        if (!this.state.repo) {
+            return <p>Carregando...</p>;
+        }
+        let repo = this.state.repo;
+        console.log(repo);
         return (
             <div key={repo.id}>
                 <h2><a href={repo.url}>{repo.name}</a></h2>
                 <p>Issues abertas: {repo.open_issues}</p>
+                <p>Forks: {repo.forks_count}</p>
+                <p>Linguagem: {repo.language}</p>
             </div>
         );
     }
