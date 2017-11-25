@@ -6,6 +6,12 @@ import RepoList from './repoList';
 
 class App extends Component {
     render() {
+
+        let baseUrl='';
+        console.log(process.env.NODE_ENV);
+        if (process.env.NODE_ENV === 'production')
+            baseUrl = '/gitMaster';
+
         return (
             <div className="App">
                 <header className="App-header">
@@ -16,8 +22,8 @@ class App extends Component {
                 <div className="App-intro">
                     <BrowserRouter>
                         <div>
-                            <Route path={'/'} exact component={RepoList}/>
-                            <Route path={'/repo/:user/:name'} component={RepoView}/>
+                            <Route path={baseUrl+'/'} exact component={RepoList}/>
+                            <Route path={baseUrl+'/repo/:user/:name'} component={RepoView}/>
                         </div>
                     </BrowserRouter>
                 </div>
